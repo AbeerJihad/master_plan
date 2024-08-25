@@ -14,9 +14,13 @@ class Plan {
   factory Plan({
     final String name = '',
     final List<Task> tasks = const [],
-  }) {
-    return Plan._internal(name, List.unmodifiable(tasks));
-  }
+  }) =>
+      Plan._internal(name, List.unmodifiable(tasks));
+
+  int get completedCount => tasks.where((task) => task.complete).length;
+
+  String get completenessMessage =>
+      '$completedCount out of ${tasks.length} tasks';
 
   Plan _copyWith({String? name, List<Task>? tasks}) {
     return Plan(

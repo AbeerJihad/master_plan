@@ -1,3 +1,5 @@
+import '../providers/plan_provider.dart';
+
 import '../models/data_layer.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +10,7 @@ class PlanScreen extends StatefulWidget {
 }
 
 class _PlanScreenState extends State<PlanScreen> {
-  Plan plan = Plan();
+  // Plan plan = Plan();
 
   //use a ScrollController to remove the focus from any TextField during a scroll event
   late ScrollController scrollController;
@@ -18,7 +20,8 @@ class _PlanScreenState extends State<PlanScreen> {
     super.initState();
     scrollController = ScrollController()
       ..addListener(() {
-        FocusScope.of(context).requestFocus(FocusNode());
+        //FocusScope.of(context).requestFocus(FocusNode());
+        FocusManager.instance.primaryFocus?.unfocus();
       });
   }
 
@@ -32,55 +35,71 @@ class _PlanScreenState extends State<PlanScreen> {
         ),
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: _buildList(),
-      floatingActionButton: _buildAddTaskButton(),
+      //ListenableBuilder -> listen/rebuild when change
+      body: ValueListenableBuilder<Plan>(
+          valueListenable: PlanProvider.of(context),
+          builder: (context, plan, child) {
+            return Column(
+              children: [
+                Expanded(child: _buildList(plan)),
+                Visibility(
+                  visible: plan.completedCount > 0,
+                  child: SafeArea(
+                    child: Text(plan.completenessMessage),
+                  ),
+                )
+              ],
+            );
+          }),
+      floatingActionButton: _buildAddTaskButton(context),
     );
   }
 
-  Widget _buildAddTaskButton() {
+  Widget _buildAddTaskButton(BuildContext context) {
+    // ValueNotifier<plan> to read/update plan of parent
+    ValueNotifier<Plan> planNotifier = PlanProvider.of(context);
     return FloatingActionButton(
       shape: const CircleBorder(),
       onPressed: () {
-        setState(() {
-          plan = plan.addTask();
-        });
+        Plan currentPlan = planNotifier.value;
+        planNotifier.value = currentPlan.addTask();
       },
       child: const Icon(Icons.add),
     );
   }
 
-  Widget _buildList() {
+  Widget _buildList(Plan plan) {
     return ListView.builder(
       controller: scrollController,
       keyboardDismissBehavior: Theme.of(context).platform == TargetPlatform.iOS
           ? ScrollViewKeyboardDismissBehavior.onDrag
           : ScrollViewKeyboardDismissBehavior.manual,
       itemCount: plan.tasks.length,
-      itemBuilder: (context, index) => _buildTaskTile(plan.tasks[index], index),
+      itemBuilder: (context, index) =>
+          _buildTaskTile(plan.tasks[index], index, context),
     );
   }
 
-  Widget _buildTaskTile(Task task, int index) {
+  Widget _buildTaskTile(Task task, int index, BuildContext context) {
+    ValueNotifier<Plan> planNotifier = PlanProvider.of(context);
     return ListTile(
       leading: Checkbox(
           value: task.complete,
           onChanged: (selected) {
-            setState(() {
-              plan = plan.updateTask(
-                index,
-                complete: selected,
-              );
-            });
+            Plan currentPlan = planNotifier.value;
+            planNotifier.value = currentPlan.updateTask(
+              index,
+              complete: selected,
+            );
           }),
       title: TextFormField(
         initialValue: task.description,
         onChanged: (text) {
-          setState(() {
-            plan = plan.updateTask(
-              index,
-              description: text,
-            );
-          });
+          Plan currentPlan = planNotifier.value;
+          planNotifier.value = currentPlan.updateTask(
+            index,
+            description: text,
+          );
         },
       ),
     );
