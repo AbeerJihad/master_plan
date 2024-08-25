@@ -1,6 +1,8 @@
 # master_plan
 
-to-do app
+a to-do note-taking application
+users can create to-do lists that contain many tasks. 
+Users can add and complete their tasks.
 
 ## Topics covered
 - Basic State Management

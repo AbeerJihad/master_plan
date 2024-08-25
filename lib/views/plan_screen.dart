@@ -8,7 +8,7 @@ class PlanScreen extends StatefulWidget {
 }
 
 class _PlanScreenState extends State<PlanScreen> {
-  Plan plan = const Plan();
+  Plan plan = Plan();
 
   //use a ScrollController to remove the focus from any TextField during a scroll event
   late ScrollController scrollController;
@@ -39,15 +39,13 @@ class _PlanScreenState extends State<PlanScreen> {
 
   Widget _buildAddTaskButton() {
     return FloatingActionButton(
-      child: const Icon(Icons.add),
+      shape: const CircleBorder(),
       onPressed: () {
         setState(() {
-          plan = Plan(
-            name: plan.name,
-            tasks: List<Task>.from(plan.tasks)..add(const Task()),
-          );
+          plan = plan.addTask();
         });
       },
+      child: const Icon(Icons.add),
     );
   }
 
@@ -68,13 +66,9 @@ class _PlanScreenState extends State<PlanScreen> {
           value: task.complete,
           onChanged: (selected) {
             setState(() {
-              plan = Plan(
-                name: plan.name,
-                tasks: List<Task>.from(plan.tasks)
-                  ..[index] = Task(
-                    description: task.description,
-                    complete: selected ?? false,
-                  ),
+              plan = plan.updateTask(
+                index,
+                complete: selected,
               );
             });
           }),
@@ -82,13 +76,9 @@ class _PlanScreenState extends State<PlanScreen> {
         initialValue: task.description,
         onChanged: (text) {
           setState(() {
-            plan = Plan(
-              name: plan.name,
-              tasks: List<Task>.from(plan.tasks)
-                ..[index] = Task(
-                  description: text,
-                  complete: task.complete,
-                ),
+            plan = plan.updateTask(
+              index,
+              description: text,
             );
           });
         },
