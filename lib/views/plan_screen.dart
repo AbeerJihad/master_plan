@@ -64,8 +64,9 @@ class _PlanScreenState extends State<PlanScreen> {
       shape: const CircleBorder(),
       onPressed: () {
         Plan currentPlan = plan;
-        int planIndex =
-            plansNotifier.value.indexWhere((p) => p.name == currentPlan.name);
+        int planIndex = plansNotifier.value.indexWhere(
+          (p) => p.name == currentPlan.name,
+        );
         Plan updatedPlan = plansNotifier.value[planIndex].addTask();
 
         plansNotifier.value = List<Plan>.from(plansNotifier.value)
