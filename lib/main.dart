@@ -19,7 +19,7 @@ class MasterPlanApp extends StatelessWidget {
     MaterialTheme theme = MaterialTheme(textTheme);
 
     return PlanProvider(
-      notifier: ValueNotifier<List<Plan>>(const []),
+      notifier: ValueNotifier<TodoPlans>(TodoPlans()),
       child: MaterialApp(
         theme: theme.light(),
         darkTheme: theme.dark(),

@@ -29,7 +29,8 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<List<Plan>> plansNotifier = PlanProvider.of(context);
+    ValueNotifier<TodoPlans> plansNotifier = PlanProvider.of(context);
+    Plan currentPlan = plansNotifier.value.getPlan(plan.name);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -37,40 +38,29 @@ class _PlanScreenState extends State<PlanScreen> {
         ),
       ),
       //ListenableBuilder -> listen/rebuild when change
-      body: ValueListenableBuilder<List<Plan>>(
-          valueListenable: plansNotifier,
-          builder: (context, plans, child) {
-            Plan currentPlan = plans.firstWhere((p) => p.name == plan.name);
-            return Column(
-              children: [
-                Expanded(child: _buildList(currentPlan)),
-                Visibility(
-                  visible: currentPlan.completedCount > 0,
-                  child: SafeArea(
-                    child: Text(currentPlan.completenessMessage),
-                  ),
-                )
-              ],
-            );
-          }),
+      body: Column(
+        children: [
+          Expanded(child: _buildList(currentPlan)),
+          Visibility(
+            visible: currentPlan.completedCount > 0,
+            child: SafeArea(
+              child: Text(currentPlan.completenessMessage),
+            ),
+          )
+        ],
+      ),
       floatingActionButton: _buildAddTaskButton(context),
     );
   }
 
   Widget _buildAddTaskButton(BuildContext context) {
     // ValueNotifier<plan> to read/update plan of parent
-    ValueNotifier<List<Plan>> plansNotifier = PlanProvider.of(context);
+    ValueNotifier<TodoPlans> plansNotifier = PlanProvider.of(context);
     return FloatingActionButton(
       shape: const CircleBorder(),
       onPressed: () {
-        Plan currentPlan = plan;
-        int planIndex = plansNotifier.value.indexWhere(
-          (p) => p.name == currentPlan.name,
-        );
-        Plan updatedPlan = plansNotifier.value[planIndex].addTask();
-
-        plansNotifier.value = List<Plan>.from(plansNotifier.value)
-          ..[planIndex] = updatedPlan;
+        Plan currentPlan = plansNotifier.value.getPlan(plan.name);
+        plansNotifier.value = plansNotifier.value.addTaskTo(currentPlan);
       },
       child: const Icon(Icons.add),
     );
@@ -89,37 +79,27 @@ class _PlanScreenState extends State<PlanScreen> {
   }
 
   Widget _buildTaskTile(Task task, int index, BuildContext context) {
-    ValueNotifier<List<Plan>> planNotifier = PlanProvider.of(context);
+    ValueNotifier<TodoPlans> plansNotifier = PlanProvider.of(context);
     return ListTile(
       leading: Checkbox(
           value: task.complete,
           onChanged: (selected) {
-            Plan currentPlan = plan;
-            int planIndex = planNotifier.value
-                .indexWhere((p) => p.name == currentPlan.name);
-
-            Plan updatedPlan = planNotifier.value[planIndex].updateTask(
+            Plan currentPlan = plansNotifier.value.getPlan(plan.name);
+            plansNotifier.value = plansNotifier.value.updateTaskinPlan(
+              currentPlan,
               index,
               complete: selected,
             );
-
-            planNotifier.value = List<Plan>.from(planNotifier.value)
-              ..[planIndex] = updatedPlan;
           }),
       title: TextFormField(
         initialValue: task.description,
         onChanged: (text) {
-          Plan currentPlan = plan;
-          int planIndex =
-              planNotifier.value.indexWhere((p) => p.name == currentPlan.name);
-
-          Plan updatedPlan = planNotifier.value[planIndex].updateTask(
+          Plan currentPlan = plansNotifier.value.getPlan(plan.name);
+          plansNotifier.value = plansNotifier.value.updateTaskinPlan(
+            currentPlan,
             index,
             description: text,
           );
-
-          planNotifier.value = List<Plan>.from(planNotifier.value)
-            ..[planIndex] = updatedPlan;
         },
       ),
     );

@@ -55,16 +55,16 @@ class _PlanCreatorScreenState extends State<PlanCreatorScreen> {
       return;
     }
     final plan = Plan(name: text, tasks: const []);
-    ValueNotifier<List<Plan>> planNotifier = PlanProvider.of(context);
-    planNotifier.value = List<Plan>.from(planNotifier.value)..add(plan);
+    ValueNotifier<TodoPlans> planNotifier = PlanProvider.of(context);
+    planNotifier.value = planNotifier.value.addPlan(plan);
     textController.clear();
     FocusScope.of(context).requestFocus(FocusNode());
     setState(() {});
   }
 
   Widget _buildMasterPlans() {
-    ValueNotifier<List<Plan>> planNotifier = PlanProvider.of(context);
-    List<Plan> plans = planNotifier.value;
+    ValueNotifier<TodoPlans> planNotifier = PlanProvider.of(context);
+    List<Plan> plans = planNotifier.value.plans;
     if (plans.isEmpty) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.center,
