@@ -81,6 +81,14 @@ class _PlanCreatorScreenState extends State<PlanCreatorScreen> {
           return ListTile(
               title: Text(plan.name),
               subtitle: Text(plan.completenessMessage),
+              trailing: plan.isCompleted
+                  ? const Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                    )
+                  : const SizedBox(
+                      width: 10,
+                    ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (_) => PlanScreen(

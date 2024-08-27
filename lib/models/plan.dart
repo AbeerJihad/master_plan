@@ -42,6 +42,8 @@ class Plan {
     );
   }
 
+  bool get isCompleted => tasks.isNotEmpty && completedCount == tasks.length;
+
   Plan updateTask(
     int index, {
     String? description,
@@ -60,4 +62,3 @@ class Plan {
           ])); */
   }
 }
-  
