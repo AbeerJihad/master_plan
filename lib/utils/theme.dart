@@ -368,6 +368,7 @@ class MaterialTheme {
         ),
         appBarTheme: AppBarTheme(
             backgroundColor: colorScheme.primary,
+            centerTitle: true,
             titleTextStyle: const TextStyle().copyWith(
               color: colorScheme.onPrimary,
               fontSize: 18,

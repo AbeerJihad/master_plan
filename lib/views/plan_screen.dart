@@ -33,8 +33,9 @@ class _PlanScreenState extends State<PlanScreen> {
     Plan currentPlan = plansNotifier.value.getPlan(plan.name);
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Master Plan',
+        centerTitle: false,
+        title: Text(
+          currentPlan.name,
         ),
       ),
       //ListenableBuilder -> listen/rebuild when change
