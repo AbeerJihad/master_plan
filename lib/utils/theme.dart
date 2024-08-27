@@ -366,6 +366,15 @@ class MaterialTheme {
           bodyColor: colorScheme.onSurface,
           displayColor: colorScheme.onSurface,
         ),
+        appBarTheme: AppBarTheme(
+            backgroundColor: colorScheme.primary,
+            titleTextStyle: const TextStyle().copyWith(
+              color: colorScheme.onPrimary,
+              fontSize: 18,
+            ),
+            iconTheme: const IconThemeData().copyWith(
+              color: colorScheme.onPrimary,
+            )),
         scaffoldBackgroundColor: colorScheme.surface,
         canvasColor: colorScheme.surface,
       );
