@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'providers/providers_layer.dart';
 import './utils/theme.dart';
-import '../models/data_layer.dart';
-
 import 'views/plan_creator_screen.dart';
 
 void main() {
