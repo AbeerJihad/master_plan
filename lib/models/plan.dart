@@ -7,25 +7,27 @@ import 'package:meta/meta.dart';
 @immutable
 class Plan {
   final String name;
-  final List<Task> tasks;
+  final List<Task> _tasks;
 
-  const Plan._internal(this.name, this.tasks);
+  const Plan._internal(this.name, this._tasks);
 
   factory Plan({
     required String name,
-    final List<Task> tasks = const [],
+    final List<Task>? tasks,
   }) =>
-      Plan._internal(name, List.unmodifiable(tasks));
+      Plan._internal(name, List<Task>.from(tasks ?? const []));
 
-  int get completedCount => tasks.where((task) => task.complete).length;
+  List<Task> get tasks => List.unmodifiable(_tasks);
+
+  int get completedCount => _tasks.where((task) => task.complete).length;
 
   String get completenessMessage =>
-      '$completedCount out of ${tasks.length} tasks';
+      '$completedCount out of ${_tasks.length} tasks';
 
   Plan _copyWith({String? name, List<Task>? tasks}) {
     return Plan(
       name: name ?? this.name,
-      tasks: tasks ?? List<Task>.from(this.tasks),
+      tasks: tasks ?? List<Task>.from(_tasks),
     );
   }
 
@@ -35,14 +37,14 @@ class Plan {
 
   Plan addTask({Task? task}) {
     return _copyWith(
-      tasks: List<Task>.from(tasks)
+      tasks: List<Task>.from(_tasks)
         ..add(
           task ?? const Task(),
         ),
     );
   }
 
-  bool get isCompleted => tasks.isNotEmpty && completedCount == tasks.length;
+  bool get isCompleted => _tasks.isNotEmpty && completedCount == _tasks.length;
 
   Plan updateTask(
     int index, {
@@ -50,8 +52,8 @@ class Plan {
     bool? complete,
   }) {
     return _copyWith(
-        tasks: List<Task>.from(tasks)
-          ..[index] = tasks[index].copyWith(
+        tasks: List<Task>.from(_tasks)
+          ..[index] = _tasks[index].copyWith(
             description: description,
             complete: complete,
           ));

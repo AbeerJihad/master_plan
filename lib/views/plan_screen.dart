@@ -94,6 +94,9 @@ class _PlanScreenState extends State<PlanScreen> {
           }),
       title: TextFormField(
         initialValue: task.description,
+        style: task.complete
+            ? const TextStyle().copyWith(decoration: TextDecoration.lineThrough)
+            : const TextStyle().copyWith(),
         onChanged: (text) {
           Plan currentPlan = plansNotifier.value.getPlan(plan.name);
           plansNotifier.value = plansNotifier.value.updateTaskinPlan(
