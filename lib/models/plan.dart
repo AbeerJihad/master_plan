@@ -12,7 +12,7 @@ class Plan {
   const Plan._internal(this.name, this.tasks);
 
   factory Plan({
-    final String name = '',
+    required String name,
     final List<Task> tasks = const [],
   }) =>
       Plan._internal(name, List.unmodifiable(tasks));
