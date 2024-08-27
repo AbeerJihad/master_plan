@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './providers/plan_provider.dart';
+import 'providers/providers_layer.dart';
 import './utils/theme.dart';
 import '../models/data_layer.dart';
 
@@ -18,8 +18,8 @@ class MasterPlanApp extends StatelessWidget {
         createTextTheme(context, "Cantora One", "Cabin Condensed");
     MaterialTheme theme = MaterialTheme(textTheme);
 
-    return PlanProvider(
-      notifier: ValueNotifier<TodoPlans>(TodoPlans()),
+    return PlansProvider(
+      notifier: PlansNotifier(),
       child: MaterialApp(
         theme: theme.light(),
         darkTheme: theme.dark(),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/data_layer.dart';
-import '../providers/plan_provider.dart';
+import '../providers/providers_layer.dart';
 import '../views/plan_screen.dart';
 
 class PlanCreatorScreen extends StatefulWidget {
@@ -55,16 +55,16 @@ class _PlanCreatorScreenState extends State<PlanCreatorScreen> {
       return;
     }
     final plan = Plan(name: text, tasks: const []);
-    ValueNotifier<TodoPlans> planNotifier = PlanProvider.of(context);
-    planNotifier.value = planNotifier.value.addPlan(plan);
+    PlansNotifier planNotifier = PlansProvider.of(context);
+    planNotifier.addPlan(plan);
     textController.clear();
     FocusScope.of(context).requestFocus(FocusNode());
     setState(() {});
   }
 
   Widget _buildMasterPlans() {
-    ValueNotifier<TodoPlans> planNotifier = PlanProvider.of(context);
-    List<Plan> plans = planNotifier.value.plans;
+    PlansNotifier planNotifier = PlansProvider.of(context);
+    List<Plan> plans = planNotifier.value;
     if (plans.isEmpty) {
       return Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,4 @@
-import '../providers/plan_provider.dart';
+import '../providers/providers_layer.dart';
 
 import '../models/data_layer.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +29,8 @@ class _PlanScreenState extends State<PlanScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ValueNotifier<TodoPlans> plansNotifier = PlanProvider.of(context);
-    Plan currentPlan = plansNotifier.value.getPlan(plan.name);
+    PlansNotifier plansNotifier = PlansProvider.of(context);
+    Plan currentPlan = plansNotifier.getPlan(plan.name);
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -56,12 +56,12 @@ class _PlanScreenState extends State<PlanScreen> {
 
   Widget _buildAddTaskButton(BuildContext context) {
     // ValueNotifier<plan> to read/update plan of parent
-    ValueNotifier<TodoPlans> plansNotifier = PlanProvider.of(context);
+    PlansNotifier plansNotifier = PlansProvider.of(context);
     return FloatingActionButton(
       shape: const CircleBorder(),
       onPressed: () {
-        Plan currentPlan = plansNotifier.value.getPlan(plan.name);
-        plansNotifier.value = plansNotifier.value.addTaskTo(currentPlan);
+        Plan currentPlan = plansNotifier.getPlan(plan.name);
+        plansNotifier.addTaskTo(currentPlan);
       },
       child: const Icon(Icons.add),
     );
@@ -80,13 +80,13 @@ class _PlanScreenState extends State<PlanScreen> {
   }
 
   Widget _buildTaskTile(Task task, int index, BuildContext context) {
-    ValueNotifier<TodoPlans> plansNotifier = PlanProvider.of(context);
+    PlansNotifier plansNotifier = PlansProvider.of(context);
     return ListTile(
       leading: Checkbox(
           value: task.complete,
           onChanged: (selected) {
-            Plan currentPlan = plansNotifier.value.getPlan(plan.name);
-            plansNotifier.value = plansNotifier.value.updateTaskinPlan(
+            Plan currentPlan = plansNotifier.getPlan(plan.name);
+            plansNotifier.updateTaskinPlan(
               currentPlan,
               index,
               complete: selected,
@@ -98,8 +98,8 @@ class _PlanScreenState extends State<PlanScreen> {
             ? const TextStyle().copyWith(decoration: TextDecoration.lineThrough)
             : const TextStyle().copyWith(),
         onChanged: (text) {
-          Plan currentPlan = plansNotifier.value.getPlan(plan.name);
-          plansNotifier.value = plansNotifier.value.updateTaskinPlan(
+          Plan currentPlan = plansNotifier.getPlan(plan.name);
+          plansNotifier.updateTaskinPlan(
             currentPlan,
             index,
             description: text,
